@@ -1,0 +1,9 @@
+/plugins
+/mu-plugins/bedrock-autoloader.php
+/mu-plugins/disallow-indexing.php
+/mu-plugins/register-theme-directory.php
+/themes/2.03-twentyseventeen-child
+/themes/2.04-twentysixteen-child
+/themes/2.06-demo-starter
+/themes/2.07-jointswp-starter
+/uploads

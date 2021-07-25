@@ -1,0 +1,11 @@
+{
+    "uris": [
+        "file://C:\\Users\\ry\\Local Sites\\lemlitdev\\app\\public\\wp-content\\themes\\generatepress_child"
+    ],
+    "indexDatabaseUri": "file://C:\\Users\\ry\\AppData\\Roaming\\php-ide-serenata\\index-bd6ea8ab7fa6321e2487a762160bd4d5.sqlite",
+    "phpVersion": 7.3,
+    "excludedPathExpressions": [],
+    "fileExtensions": [
+        "php"
+    ]
+}
