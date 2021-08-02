@@ -56,7 +56,7 @@ get_header(); ?>
         ?>
       </header>
       <div class="entry-content table-responsive">
-        <table class="table table-bordered proposal">
+        <table class="table table-bordered table-fixed proposal">
           <thead>
             <tr>
               <th>#</th>
@@ -77,12 +77,13 @@ get_header(); ?>
             if (array_intersect($allowed_roles, $current_user->roles)) {
               $args = array(
                 'post_type' => 'proposal',
+                'post_status' => 'any'
               );
             }
             if (!current_user_can('delete_plugins')) {
               $args = array(
                 'post_type' => 'proposal',
-                'post_status' => 'publish',
+                'post_status' => array('publish', 'pending', 'private'),
                 'author' => $current_user->ID,
               );
             }
@@ -90,20 +91,14 @@ get_header(); ?>
             if (have_posts()) : while (have_posts()) : the_post();  ?>
                 <tr id="proposal- <?php the_ID(); ?>" <?php post_class() ?>>
                   <td>1</td>
-                  <td><?php echo esc_html(get_post_meta(get_the_ID(), 'proposal_ketua', true)) ?></td>
-                  <td><?php echo esc_html(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
-                  <td><?php echo esc_html(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
-                  <td><?php echo esc_html(get_post_meta(get_the_ID(), 'proposal_judul', true)) ?></td>
-                  <td><?php echo esc_html(get_post_meta(get_the_ID(), 'proposal_pencairan_dana', true)) ?></td>
-                  <td><?php echo esc_html(get_post_meta(get_the_ID(), 'proposal_status', true)) ?></td>
-                  <td><?php echo esc_html(get_post_meta(get_the_ID(), 'proposal_data_dukung', true)) ?></td>
-                  <td>
-                    <div class="flex">
-                      <a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                      <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                      <a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                    </div>
-                  </td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_ketua', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_judul', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_pencairan_dana', true)) ?></td>
+                  <td><?php esc_html_e(get_post_status(get_the_ID())) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_data_dukung', true)) ?></td>
+                  <td><?php the_shortlink('View') ?></td>
                 </tr>
             <?php endwhile;
             endif;

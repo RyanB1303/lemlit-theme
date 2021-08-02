@@ -169,11 +169,11 @@ class proposal_post_editor
 			</tr>
 			<tr>
 				<th><label for="dana_proposal">Dana Proposal</label></th>
-				<td><input type="number" min="0" step="50000" name="dana_proposal" id="dana_proposal" class="regular-text" value="" /></td>
+				<td><input type="number" min="0" step="50000" name="dana_proposal" id="dana_proposal" class="regular-text" value="<?php isset($output_dana) ? esc_html_e($output_dana) : '' ?>" /></td>
 			</tr>
 			<tr>
 				<th><label for="data_dukung_proposal">Data Dukung SK Rektor</label></th>
-				<td><input type="date" name="data_dukung_proposal" id="data_dukung_proposal" class="regular-text" /></td>
+				<td><input type="date" name="data_dukung_proposal" id="data_dukung_proposal" class="regular-text" value="<?php isset($output_data_dukung) ? esc_html_e($output_data_dukung) : '' ?>" /></td>
 			</tr>
 		</table>
 <?php

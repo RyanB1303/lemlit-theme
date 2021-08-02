@@ -144,34 +144,71 @@ function create_lemlit_role()
  */
 function create_lemlit_page()
 {
-	$page_proposal = array(
-		'post_title'     => 'Proposal',
+	$page_login = array(
+		'post_title'     => 'Login',
 		'post_type'      => 'page',
-		'comment_status' => 'closed',
-		'menu_order'     => 1,
+		'post_status' => 'published',
+	);
+	$page_register = array(
+		'post_title'     => 'Register',
+		'post_type'      => 'page',
+		'post_status' => 'published',
+	);
+	$page_create_role = array(
+		'post_title'     => 'Create Role',
+		'post_type'      => 'page',
+		'post_status' => 'published',
+	);
+	$page_profile = array(
+		'post_title'     => 'Profile',
+		'post_type'      => 'page',
+		'post_status' => 'published',
+	);
+	$page_report = array(
+		'post_title'     => 'Report',
+		'post_type'      => 'page',
+		'post_status' => 'published',
+	);
+	$page_nilai_drf = array(
+		'post_title'     => 'Nilai DRF',
+		'post_type'      => 'page',
+		'post_status' => 'published',
+	);
+	$page_pilih_reviewer = array(
+		'post_title'     => 'Pilih Reviewer',
+		'post_type'      => 'page',
+		'post_status' => 'published',
+	);
+	$page_penelitian_terakhir = array(
+		'post_title'     => 'Penelitian Terakhir',
+		'post_type'      => 'page',
+		'post_status' => 'published',
+	);
+	$page_nilai_reviewer = array(
+		'post_title'     => 'Nilai Reviewer',
+		'post_type'      => 'page',
+		'post_status' => 'published',
 	);
 	$page_proposal = array(
 		'post_title'     => 'Proposal',
 		'post_type'      => 'page',
-		'comment_status' => 'closed',
-		'menu_order'     => 1,
+		'post_status' => 'published',
 	);
-	$page_proposal = array(
-		'post_title'     => 'Proposal',
-		'post_type'      => 'page',
-		'comment_status' => 'closed',
-		'menu_order'     => 1,
-	);
-	$page_proposal = array(
-		'post_title'     => 'Proposal',
-		'post_type'      => 'page',
-		'comment_status' => 'closed',
-		'menu_order'     => 1,
-	);
+
+	wp_insert_post($page_login);
+	wp_insert_post($page_register);
+	wp_insert_post($page_create_role);
+	wp_insert_post($page_profile);
+	wp_insert_post($page_report);
+	wp_insert_post($page_nilai_drf);
+	wp_insert_post($page_pilih_reviewer);
+	wp_insert_post($page_penelitian_terakhir);
+	wp_insert_post($page_nilai_reviewer);
+	wp_insert_post($page_proposal);
 }
 
 add_action('back_button', 'wpse221640_back_button');
 add_action('wp_enqueue_scripts', 'get_bootstrap_css_js');
 
 add_action('init', 'create_lemlit_role');
-add_action('init', 'create_lemlit_page');
+add_action('after_switch_theme', 'create_lemlit_page');
