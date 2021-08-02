@@ -117,26 +117,64 @@ function wti_loginout_menu_link($items, $args)
  */
 function create_lemlit_role()
 {
-  add_role('peneliti', 'Peneliti');
-  add_role('drf', 'DRF');
-  add_role('reviewer', 'Reviewer');
-  add_role('dekan', 'Dekan');
-  add_role('jurusan', 'Jurusan');
-  add_role('lemlit', 'Lemlit');
+  $editor_role_set = get_role('editor')->capabilities;
+  $author_role_set = get_role('author')->capabilities;
+  $contributor_role_set = get_role('contributor')->capabilities;
+
+  add_role('peneliti', 'Peneliti', $author_role_set);
+  add_role('drf', 'DRF', $editor_role_set);
+  add_role('reviewer', 'Reviewer', $editor_role_set);
+  add_role('dekan', 'Dekan', $contributor_role_set);
+  add_role('jurusan', 'Jurusan', $contributor_role_set);
+  add_role('lemlit', 'Lemlit', $editor_role_set);
 
   $peneliti = get_role('peneliti');
-  $peneliti->add_cap('read ');
-  $peneliti->add_cap('delete_posts ');
-  $peneliti->add_cap('edit_posts');
-  $peneliti->add_cap('edit_publish_posts ');
+  $peneliti->add_cap('read');
+  $peneliti->add_cap('edit_proposal');
+  $peneliti->add_cap('edit_publish_proposals');
+  $peneliti->add_cap('delete_proposals');
+  $peneliti->add_cap('delete_private_proposals');
   $peneliti->add_cap('upload_files');
 
-  $reviewer = get_role('reviewer');
-  $drf      = get_role('drf');
-  $dekan    = get_role('dekan');
+  $drf = get_role('drf');
   $drf->add_cap('read');
+  $drf->add_cap('edit_proposal');
+  $drf->add_cap('edit_proposals');
+  $drf->add_cap('edit_others_proposal');
+  $drf->add_cap('publish_proposals');
+  $drf->add_cap('upload_files');
+
+  $reviewer = get_role('reviewer');
   $reviewer->add_cap('read');
+  $reviewer->add_cap('edit_proposal');
+  $reviewer->add_cap('edit_proposals');
+  $reviewer->add_cap('edit_others_proposal');
+  $reviewer->add_cap('publish_proposals');
+  $reviewer->add_cap('upload_files');
+
+  $dekan = get_role('dekan');
   $dekan->add_cap('read');
+  $dekan->add_cap('edit_proposal');
+  $dekan->add_cap('edit_proposals');
+  $dekan->add_cap('edit_others_proposal');
+  $dekan->add_cap('publish_proposals');
+  $dekan->add_cap('upload_files');
+
+  $jurusan = get_role('jurusan');
+  $jurusan->add_cap('read');
+  $jurusan->add_cap('edit_proposal');
+  $jurusan->add_cap('edit_proposals');
+  $jurusan->add_cap('edit_others_proposal');
+  $jurusan->add_cap('publish_proposals');
+  $jurusan->add_cap('upload_files');
+
+  $lemlit = get_role('lemlit');
+  $lemlit->add_cap('read');
+  $lemlit->add_cap('edit_proposal');
+  $lemlit->add_cap('edit_proposals');
+  $lemlit->add_cap('edit_others_proposal');
+  $lemlit->add_cap('publish_proposals');
+  $lemlit->add_cap('upload_files');
 }
 
 /**

@@ -69,7 +69,37 @@ get_header(); ?>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <?php
+            global $current_user, $wp_query;
+            $allowed_roles = array('administrator');
+            if (array_intersect($allowed_roles, $current_user->roles)) {
+              $args = array(
+                'post_type' => 'proposal',
+                'post_status' => 'any'
+              );
+            }
+            if (!current_user_can('delete_plugins')) {
+              $args = array(
+                'post_type' => 'proposal',
+                'post_status' => array('publish', 'pending', 'private'),
+                'author' => $current_user->ID,
+              );
+            }
+            $wp_query = new WP_Query($args);
+            if (have_posts()) : while (have_posts()) : the_post();  ?>
+                <tr id="proposal- <?php the_ID(); ?>" <?php post_class() ?>>
+                  <td>1</td>
+                  <td><?php esc_html_e($current_user->user_login) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_ketua', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_judul', true)) ?></td>
+                  <td><?php the_shortlink('View') ?></td>
+                </tr>
+            <?php endwhile;
+            endif;
+            ?>
+            <!-- <tr>
               <td>1</td>
               <td>0123456789</td>
               <td>Pri Agung Rakhmanto</td>
@@ -83,7 +113,7 @@ get_header(); ?>
                   <a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>
                 </div>
               </td>
-            </tr>
+            </tr> -->
           </tbody>
         </table>
       </div>

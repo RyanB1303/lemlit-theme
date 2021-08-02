@@ -71,24 +71,48 @@ get_header(); ?>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>0123456789</td>
-              <td>Pri Agung Rakhmanto</td>
-              <td>S1 - SI</td>
-              <td>Kategori IV</td>
-              <td>Effect of Sand Grain Size on Spontaneous Imbibiton of Surfactant Solution</td>
-              <td>Alidstya Mandala</td>
-              <td>Revisi Monev I</td>
-              <td>
-                <div class="flex">
-                  <a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                  <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                  <a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                </div>
-              </td>
-            </tr>
+            <form name="submit_reviewer" method="post">
+              <?php
+              $args = array(
+                'post_type'   => 'proposal',
+                'post_status' => 'pending',
+              );
+              $wp_query = new WP_Query($args);
+              if (have_posts()) : while (have_posts()) : the_post(); ?>
+                  <tr id="proposal- <?php the_ID(); ?>" <?php post_class() ?>>
+                    <td>1</td>
+                    <td><?php esc_html_e($current_user->user_login) ?></td>
+                    <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_ketua', true)) ?></td>
+                    <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
+                    <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
+                    <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_judul', true)) ?></td>
+                    <td>
+                      <select name="reviewer" id="rvw">
+                        <?php
+                        $args1 = array(
+                          'role'    => 'reviewer',
+                          'orderby' => 'user_nicename',
+                          'order'   => 'ASC',
+                        );
+                        $reviewers = get_users($args1);
+                        foreach ($reviewers as $reviewer) {
+                        ?>
+                          <option value="<?php esc_html_e($reviewer->ID) ?>"><?php esc_html_e($reviewer->display_name) ?></option>;
+                        <?php
+                        }
+                        ?>
+                        ?>
+                      </select>
+                    </td>
+                    <td></td>
+                    <td><input type="submit" name="submit_role" value="Setujui" /></td>
+                  </tr>
+              <?php endwhile;
+              endif;
+              ?>
+              </tr>
           </tbody>
+          </form>
         </table>
       </div>
     </div>
@@ -110,7 +134,5 @@ get_header(); ?>
  * @since 2.0
  */
 do_action('generate_after_primary_content_area');
-
-
 
 get_footer();
