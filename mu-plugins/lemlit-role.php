@@ -16,10 +16,10 @@ class proposal_post_editor
     add_action('init', [$this, 'create_role_jurusan']);
     add_action('init', [$this, 'create_role_lemlit']);
   }
-  protected $editor_role_set = get_role('editor')->capabilities;
-  protected $author_role_set = get_role('author')->capabilities;
-  protected $contributor_role_set = get_role('contributor')->capabilities;
-  protected $proposal_cap = array(
+  public $editor_role_set = get_role('editor')->capabilities;
+  public $author_role_set = get_role('author')->capabilities;
+  public $contributor_role_set = get_role('contributor')->capabilities;
+  public $proposal_cap = array(
     'edit_proposals' => true,
     'edit_publish_proposals' => true,
     'delete_proposals' => true,
@@ -34,7 +34,7 @@ class proposal_post_editor
     $my_cap = array_merge($this->author_role_set, $this->proposal_cap);
     add_role('peneliti', 'Peneliti', $my_cap);
     $peneliti = get_role('peneliti');
-    $peneliti->remove_role('publish_proposals');
+    $peneliti->remove_cap('publish_proposals');
   }
 
   function create_role_drf()
