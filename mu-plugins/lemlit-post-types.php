@@ -20,7 +20,7 @@ class proposal_post_editor
 
   public function proposal_admin_menu()
   {
-    if (current_user_can('peneliti')) {
+    if (current_user_can('delete_private_proposals')) {
 
       remove_menu_page('edit.php');                   //Posts
       remove_menu_page('upload.php');                 //Media
