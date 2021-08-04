@@ -46,9 +46,6 @@ get_header(); ?>
 
           the_title($params['before'], $params['after']);
         }
-        var_dump($admin_role_set = get_role('peneliti')->capabilities);
-        var_dump($admin_role_set = get_role('reviewer')->capabilities);
-        var_dump($admin_role_set = get_role('editor')->capabilities);
         /**
          * generate_after_page_title hook.
          *
