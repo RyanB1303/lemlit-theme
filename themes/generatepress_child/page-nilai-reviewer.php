@@ -67,27 +67,29 @@ get_header(); ?>
               <th>Judul</th>
               <th>Target Capaian</th>
               <th>Nilai Reviewer</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>0123456789</td>
-              <td>Pri Agung Rakhmanto</td>
-              <td>S1 - SI</td>
-              <td>Kategori IV</td>
-              <td>Effect of Sand Grain Size on Spontaneous Imbibiton of Surfactant Solution</td>
-              <td>80%</td>
-              <td>85%</td>
-              <td>
-                <div class="flex">
-                  <a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                  <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                  <a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                </div>
-              </td>
-            </tr>
+            <?php
+            $args = array(
+              'post_type'   => 'proposal',
+              'post_status' => ['pending', 'reviewing'],
+            );
+            $wp_query = new WP_Query($args);
+            if (have_posts()) : while (have_posts()) : the_post(); ?>
+                <tr id="proposal- <?php the_ID(); ?>" <?php post_class() ?>>
+                  <td>1</td>
+                  <td><?php esc_html_e($current_user->user_login) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_ketua', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
+                  <td><?php esc_html_e(the_title()) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'target_capaian', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'nilai_reviewer', true)) ?></td>
+                </tr>
+            <?php endwhile;
+            endif;
+            ?>
           </tbody>
         </table>
       </div>
