@@ -79,13 +79,13 @@ get_header(); ?>
             if (have_posts()) : while (have_posts()) : the_post(); ?>
                 <tr id="proposal- <?php the_ID(); ?>" <?php post_class() ?>>
                   <td>1</td>
-                  <td><?php esc_html_e($current_user->user_login) ?></td>
+                  <td><?php esc_html_e(the_author()) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_ketua', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
                   <td><?php esc_html_e(the_title()) ?></td>
-                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'target_capaian', true)) ?></td>
-                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'nilai_reviewer', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'target_nilai_proposal', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'nilai_reviewer_proposal', true)) ?></td>
                 </tr>
             <?php endwhile;
             endif;

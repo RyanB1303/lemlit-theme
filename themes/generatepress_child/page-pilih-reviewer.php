@@ -93,17 +93,19 @@ get_header(); ?>
               'post_status' => ['pending', 'reviewing'],
             );
             $wp_query = new WP_Query($args);
+            $i = 1;
             if (have_posts()) : while (have_posts()) : the_post(); ?>
                 <form name="submit_reviewer" method="post">
                   <tr id="proposal- <?php the_ID(); ?>" <?php post_class() ?>>
-                    <td>1</td>
-                    <td><?php esc_html_e($current_user->user_login) ?></td>
+                    <td><?php esc_html_e($i) ?></td>
+                    <td><?php esc_html_e(the_author()) ?></td>
                     <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_ketua', true)) ?></td>
                     <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
                     <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
                     <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_judul', true)) ?></td>
                     <td>
                       <select name="reviewer" id="rvw">
+                        <option value="" disabled selected>Pilih Reviewer</option>
                         <?php
                         $args1 = array(
                           'role'    => 'reviewer',
@@ -113,7 +115,7 @@ get_header(); ?>
                         $reviewers = get_users($args1);
                         foreach ($reviewers as $reviewer) {
                         ?>
-                          <option value="<?php esc_html_e($reviewer->ID) ?>"><?php esc_html_e($reviewer->display_name) ?></option>;
+                          <option value="<?php esc_html_e($reviewer->ID) ?>" <?php if ($reviewer->ID == get_post_meta(get_the_ID(), 'reviewer', true)) echo 'selected' ?>><?php esc_html_e($reviewer->display_name) ?></option>;
                         <?php
                         }
                         ?>
@@ -124,7 +126,13 @@ get_header(); ?>
                     <td>
                       <div class="flex">
                         <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
-                        <input type="submit" name="submit_reviewer" value="Setujui" />
+                        <?php if (get_post_meta(get_the_ID(), 'reviewer', true) == '') {
+                        ?>
+                          <input type="submit" name="submit_reviewer" value="Setujui" />
+                        <?php
+                        }
+                        $i++;
+                        ?>
                     </td>
       </div>
       </tr>
