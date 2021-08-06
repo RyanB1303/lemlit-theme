@@ -122,7 +122,7 @@ get_header(); ?>
                         ?>
                       </select>
                     </td>
-                    <td><?php echo esc_html_e(get_post_status()); ?></td>
+                    <td><?php echo esc_html_e(get_post_meta(get_the_ID(), 'proposal_status', true)); ?></td>
                     <td>
                       <div class="flex">
                         <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
