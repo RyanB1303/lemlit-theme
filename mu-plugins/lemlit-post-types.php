@@ -19,7 +19,7 @@ class proposal_post_editor
     add_filter('enter_title_here', [$this, 'my_title_place_holder'], 20, 2);
     add_filter('manage_proposal_posts_columns', [$this, 'custom_table_header_proposal']);
     add_action('manage_proposal_posts_custom_column', [$this, 'custom_columns_proposal'], 10, 2);
-    add_filter('wp_insert_post_data', [$this, 'change_proposal_status'], 30);
+    // add_filter('wp_insert_post_data', [$this, 'change_proposal_status'], 30);
   }
 
   public function proposal_admin_menu()
@@ -120,7 +120,17 @@ class proposal_post_editor
       'show_in_metabox_dropdown'  => true,
       'show_in_inline_dropdown'   => true,
     ));
-    register_post_status('monev_I', array(
+    register_post_status('pengajuan_dana_ii', array(
+      'label'                     => 'Pengajuan Dana ',
+      'public'                    => true,
+      'label_count'               => _n_noop('Pengajuan Dana  s <span class="count">(%s)</span>', 'Pengajuan Dana  s <span class="count">(%s)</span>', 'plugin-domain'),
+      'post_type'                 => array('proposal'), // Define one or more post types the status can be applied to.
+      'show_in_admin_all_list'    => true,
+      'show_in_admin_status_list' => true,
+      'show_in_metabox_dropdown'  => true,
+      'show_in_inline_dropdown'   => true,
+    ));
+    register_post_status('monev_i', array(
       'label'                     => 'Monev I ',
       'public'                    => true,
       'label_count'               => _n_noop('Monev I  s <span class="count">(%s)</span>', 'Monev I  s <span class="count">(%s)</span>', 'plugin-domain'),
@@ -130,7 +140,7 @@ class proposal_post_editor
       'show_in_metabox_dropdown'  => true,
       'show_in_inline_dropdown'   => true,
     ));
-    register_post_status('monev_II', array(
+    register_post_status('monev_ii', array(
       'label'                     => 'Monev II ',
       'public'                    => true,
       'label_count'               => _n_noop('Monev II  s <span class="count">(%s)</span>', 'Monev II  s <span class="count">(%s)</span>', 'plugin-domain'),
@@ -140,7 +150,7 @@ class proposal_post_editor
       'show_in_metabox_dropdown'  => true,
       'show_in_inline_dropdown'   => true,
     ));
-    register_post_status('dana_I_disetujui', array(
+    register_post_status('dana_i_disetujui', array(
       'label'                     => 'Dana I Setuju',
       'public'                    => true,
       'label_count'               => _n_noop('Dana I Setuju  s <span class="count">(%s)</span>', 'Dana I Setuju  s <span class="count">(%s)</span>', 'plugin-domain'),
@@ -150,7 +160,7 @@ class proposal_post_editor
       'show_in_metabox_dropdown'  => true,
       'show_in_inline_dropdown'   => true,
     ));
-    register_post_status('dana_II_disetujui', array(
+    register_post_status('dana_ii_disetujui', array(
       'label'                     => 'Dana II Setuju',
       'public'                    => true,
       'label_count'               => _n_noop('Dana II Setuju  s <span class="count">(%s)</span>', 'Dana II Setuju  s <span class="count">(%s)</span>', 'plugin-domain'),
@@ -249,7 +259,7 @@ class proposal_post_editor
   public function proposal_meta_box()
   {
     add_meta_box('proposal_editor', 'Proposal Editor', [$this, 'proposal_editor_html'], 'proposal', 'normal', 'high');
-    add_meta_box('nilai_reviewer', 'Nilai Reviewer', [$this, 'nilai_proposal_meta_html'], 'proposal', 'normal');
+    // add_meta_box('nilai_reviewer', 'Nilai Reviewer', [$this, 'nilai_proposal_meta_html'], 'proposal', 'normal');
   }
   public function save_proposal($post_id)
   {
@@ -277,15 +287,15 @@ class proposal_post_editor
     if (array_key_exists('status_pencairan_dana', $_POST)) {
       update_post_meta($post_id, 'proposal_pencairan_dana', $_POST['status_pencairan_dana']);
     }
-    if (array_key_exists('nilai_rev', $_POST)) {
-      update_post_meta($post_id, 'nilai_reviewer_proposal', $_POST['nilai_rev']);
-    }
-    if (array_key_exists('target_cap', $_POST)) {
-      update_post_meta($post_id, 'target_nilai_proposal', $_POST['target_cap']);
-    }
-    if (array_key_exists('status_proposal', $_POST)) {
-      update_post_meta($post_id, 'proposal_status', 'reviewed');
-    }
+    // if (array_key_exists('nilai_rev', $_POST)) {
+    //   update_post_meta($post_id, 'nilai_reviewer_proposal', $_POST['nilai_rev']);
+    // }
+    // if (array_key_exists('target_cap', $_POST)) {
+    //   update_post_meta($post_id, 'target_nilai_proposal', $_POST['target_cap']);
+    // }
+    // if (array_key_exists('status_proposal', $_POST)) {
+    //   update_post_meta($post_id, 'proposal_status', 'reviewed');
+    // }
   }
   public function proposal_editor_html()
   {

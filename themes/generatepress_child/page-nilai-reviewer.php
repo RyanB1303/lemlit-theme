@@ -94,39 +94,41 @@ get_header(); ?>
             $i = 1;
             $wp_query = new WP_Query($args);
             if (have_posts()) : while (have_posts()) : the_post(); ?>
-                <tr id="proposal- <?php the_ID(); ?>" <?php post_class() ?>>
-                  <form name="nilai_proposal" method="post">
-                    <td><?php esc_html_e($i) ?></td>
-                    <td><?php esc_html_e(the_author()) ?></td>
-                    <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_ketua', true)) ?></td>
-                    <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
-                    <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
-                    <td><?php esc_html_e(the_title()) ?></td>
-                    <?php
-                    if (!empty(get_post_meta(get_the_ID(), 'target_nilai_proposal', true))) {
-                    ?>
-                      <td><?php esc_html_e(get_post_meta(get_the_ID(), 'target_nilai_proposal', true)); ?></td>
-                    <?php } else { ?>
-                      <td><input type="number" name="target_cap" min="0" max="100" value="" /></td>
-                    <?php } ?>
-                    <?php
-                    if (!empty(get_post_meta(get_the_ID(), 'nilai_reviewer_proposal', true))) {
-                    ?>
-                      <td><?php esc_html_e(get_post_meta(get_the_ID(), 'nilai_reviewer_proposal', true)); ?></td>
-                    <?php } else { ?>
-                      <td><input type="number" name="nilai_rev" min="0" max="100" value="" /></td>
-                    <?php } ?>
-                    <td>
-                      <div class="flex">
-                        <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
-                        <?php if ('reviewed' == get_post_status(get_the_ID())) { ?>
-                          <div class="alert alert-primary"><strong>Sudah Dinilai</strong></div>
-                        <?php } else { ?>
-                          <input type="submit" name="nilai_proposal" value="Submit Nilai" />
-                        <?php } ?>
-                      </div>
-                    </td>
-                </tr>
+                <?php if (get_current_user_id() == get_post_meta(get_the_ID(), 'reviewer', true)) { ?>
+                  <tr id="proposal- <?php the_ID(); ?>" <?php post_class() ?>>
+                    <form name="nilai_proposal" method="post">
+                      <td><?php esc_html_e($i) ?></td>
+                      <td><?php esc_html_e(the_author()) ?></td>
+                      <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_ketua', true)) ?></td>
+                      <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
+                      <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
+                      <td><?php esc_html_e(the_title()) ?></td>
+                      <?php
+                      if (!empty(get_post_meta(get_the_ID(), 'target_nilai_proposal', true))) {
+                      ?>
+                        <td><?php esc_html_e(get_post_meta(get_the_ID(), 'target_nilai_proposal', true)); ?></td>
+                      <?php } else { ?>
+                        <td><input type="number" name="target_cap" min="0" max="100" value="" /></td>
+                      <?php } ?>
+                      <?php
+                      if (!empty(get_post_meta(get_the_ID(), 'nilai_reviewer_proposal', true))) {
+                      ?>
+                        <td><?php esc_html_e(get_post_meta(get_the_ID(), 'nilai_reviewer_proposal', true)); ?></td>
+                      <?php } else { ?>
+                        <td><input type="number" name="nilai_rev" min="0" max="100" value="" /></td>
+                      <?php } ?>
+                      <td>
+                        <div class="flex">
+                          <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
+                          <?php if ('reviewed' == get_post_status(get_the_ID())) { ?>
+                            <div class="alert alert-primary"><strong>Sudah Dinilai</strong></div>
+                          <?php } else { ?>
+                            <input type="submit" name="nilai_proposal" value="Submit Nilai" />
+                          <?php } ?>
+                        </div>
+                      </td>
+                  </tr>
+                <?php } ?>
                 </form>
             <?php $i++;
               endwhile;

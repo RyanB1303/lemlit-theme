@@ -55,6 +55,9 @@ get_header(); ?>
         do_action('generate_after_page_title');
         ?>
       </header>
+      <?php if (current_user_can('jurusan')) {
+        echo '<br> <br> <h3 style="color:blue;">Pencairan Dana</h3>';
+      } ?>
       <div class="entry-content table-responsive">
         <table class="table table-bordered table-fixed proposal">
           <thead>
@@ -64,6 +67,7 @@ get_header(); ?>
               <th>Prodi</th>
               <th>Kategori</th>
               <th>Judul</th>
+              <?php current_user_can('jurusan') ? print('<th>Dana Diajukan</th>') : '' ?>
               <th>Status Pencairan Dana</th>
               <th>Status Proposal</th>
               <th>Data Dukung SK Rektor</th>
@@ -90,124 +94,93 @@ get_header(); ?>
             if (current_user_can('lemlit')) {
               $args = array(
                 'post_type' => 'proposal',
-                'post_status' => array('reviewed', 'pending'),
+                'post_status' => array('reviewed', 'laporan_lpj_i', 'laporan_lpj_ii'),
               );
             }
             if (current_user_can('jurusan')) {
               $args = array(
                 'post_type' => 'proposal',
-                'post_status' => 'pengajuan_dana',
+                'post_status' => array('pengajuan_dana', 'pengajuan_dana_ii'),
               );
             }
-
-            // $content_directory = $wp_filesystem->wp_content_dir() . 'uploads/';
-            // $wp_filesystem->mkdir($content_directory . 'LPJ_I');
-            // $target_dir_location = $content_directory . 'LPJ_I/';
-            if (isset($_POST['upload_lpj']) && isset($_FILES['file_lpj'])) {
-              if (!function_exists('wp_handle_upload')) {
-                require_once(ABSPATH . 'wp-admin/includes/file.php');
-              }
-              $proposal_seleccted = isset($_POST['proposal_id']) ? wp_unslash($_POST['proposal_id']) : '';
-              if (!empty($proposal_seleccted) && !empty($file_lpj)) {
-                $file_lpj = $_FILES['file_lpj'];
-                $file_attr = wp_handle_upload($file_lpj);
-
-                $attachment = array(
-                  'post_mime_type' => $wp
-
-                );
-
-                $update_status = wp_update_post(array(
-                  'ID'          => $proposal_seleccted,
-                  'post_status' => 'laporan_lpj_i',
-                ));
-                if ($update_status != 0) {
-                  update_post_meta($proposal_seleccted, 'proposal_status', 'laporan_lpj_i');
-                }
-              }
-            }
-            if (isset($_POST['ajukan_dana'])) {
-              $proposal_seleccted = isset($_POST['proposal_id']) ? wp_unslash($_POST['proposal_id']) : '';
-              if (!empty($proposal_seleccted)) {
-                $update_status = wp_update_post(array(
-                  'ID'          => $proposal_seleccted,
-                  'post_status' => 'pengajuan_dana',
-                ));
-                if ($update_status != 0) {
-                  update_post_meta($proposal_seleccted, 'proposal_status', 'pengajuan dana');
-                }
-              }
-            }
-            if (isset($_POST['setujui_dana'])) {
-              $proposal_seleccted = isset($_POST['proposal_id']) ? wp_unslash($_POST['proposal_id']) : '';
-              if (!empty($proposal_seleccted)) {
-                $update_status = wp_update_post(array(
-                  'ID'          => $proposal_seleccted,
-                  'post_status' => 'dana_I_disetujui',
-                ));
-                if ($update_status != 0) {
-                  update_post_meta($proposal_seleccted, 'proposal_status', 'dana_I_disetujui');
-                }
-              }
-            }
-
             $i = 1;
             $wp_query = new WP_Query($args);
-            if (have_posts()) : while (have_posts()) : the_post();  ?>
+
+            if (have_posts()) : while (have_posts()) : the_post(); ?>
                 <tr id="proposal- <?php the_ID(); ?>" <?php post_class() ?>>
                   <td><?php esc_html_e($i) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_ketua', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_judul', true)) ?></td>
+                  <?php current_user_can('jurusan') ? print('<td>' . esc_html(get_post_meta(get_the_ID(), 'proposal_dana', true)) . '</td>') : '' ?>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_pencairan_dana', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_status', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_data_dukung', true)) ?></td>
-                  <?php if (current_user_can('peneliti')) { ?>
-                    <td>
-                      <div class="flex">
-                        <form name="upload_lpj" method="post" enctype="multipart/form-data">
-                          <input type="file" id="file_lpj" name="file_lpj" hidden />
-                          <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
-                          <?php
-                          if ('monev_i' == get_post_status(get_the_ID())) {
-                          ?>
-                            <button class="btn btn-primary" id="upload-lpj-i"><strong>Upload Laporan LPJ I</strong></button>
-                            <input type="submit" name="upload_lpj" value="Submit LPJ I" class="mt-3" />
-                            <script>
-                              document.getElementById('upload-lpj-i').addEventListener('click', openDialog);
-
-                              function openDialog() {
-                                document.getElementById('file_lpj').click();
-                              }
-                            </script>
-                          <?php
-                          }
-                          if ('monev_ii' == get_post_status(get_the_ID())) {
-                          ?>
-                            <button class="btn btn-primary" id="upload-lpj-ii"><strong>Upload Laporan LPJ II</strong></button>
-                            <script>
-                              document.getElementById('upload-lpj-ii').addEventListener('click', openDialog);
-
-                              function openDialog() {
-                                document.getElementById('file_lpj').click();
-                              }
-                            </script>
-                          <?php
-                          }
-                          ?>
-                        </form>
-                      </div>
-                    </td>
                   <?php
+                  if (current_user_can('peneliti')) { ?>
+                    <?php
+                    if ('laporan_lpj_i' == get_post_meta(get_the_ID(), 'proposal_status', true)) { ?>
+                      <td>
+                        <div class="alert alert-secondary"><strong>LPJ I Di upload</strong></div>
+                      </td>
+                    <?php }
+                    if ('laporan_lpj_ii' == get_post_meta(get_the_ID(), 'proposal_status', true)) { ?>
+                      <td>
+                        <div class="alert alert-secondary"><strong>LPJ II Di upload</strong></div>
+                      </td>
+                    <?php } else { ?>
+                      <td>
+                        <div class="flex">
+                          <form name="upload_lpj" method="post" enctype="multipart/form-data">
+                            <input type="file" name="file_lpj" hidden />
+                            <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
+                            <?php
+                            if ('monev_i' == get_post_status(get_the_ID())) {
+                            ?>
+                              <!-- <button class="btn btn-primary" id="upload-lpj-i"><strong>Upload Laporan LPJ I</strong></button> -->
+                              <input type="file" name="file_lpj" />
+                              <input type="submit" name="upload_lpj" value="Submit LPJ I" class="mt-3" />
+                            <?php
+                            }
+                            if ('monev_ii' == get_post_status(get_the_ID())) {
+                            ?>
+                              <input type="file" name="file_lpj" />
+                              <input type="submit" name="upload_lpj" value="Submit LPJ II" class="mt-3" />
+                            <?php
+                            }
+                            ?>
+                          </form>
+                        </div>
+                      </td>
+                    <?php
+                    }
                   }
                   if (current_user_can('lemlit')) {
-                  ?>
+                    $attachment_id = get_post_meta(get_the_ID(), 'lpj_i_file_id', true);
+                    ?>
                     <td>
                       <div class="flex">
                         <form name="ajukan_dana" method="post">
                           <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
-                          <input type="submit" name="ajukan_dana" value="Ajukan Dana" />
+                          <?php if ('reviewed' == get_post_status(get_the_ID())) { ?>
+                            <input type="submit" name="ajukan_dana" value="Ajukan Dana I" />
+                          <?php } ?>
+                          <?php
+                          if ('laporan_lpj_i' == get_post_status(get_the_ID())) {
+                          ?>
+                            <input type="submit" name="ajukan_dana" value="Ajukan Dana II" />
+                            <div><?php if (!empty(wp_get_attachment_url($attachment_id))) print('<a href="' . (wp_get_attachment_url($attachment_id)) . '" target="_blank" download>File LPJ I</a>');
+                                  else print('Belum Ada FIle LPJ') ?></div>
+                          <?php } ?>
+                          <?php
+                          if ('laporan_lpj_ii' == get_post_status(get_the_ID())) {
+                            $attachment_id = get_post_meta(get_the_ID(), 'lpj_ii_file_id', true);
+                          ?>
+                            <input type="submit" name="ajukan_dana" value="Laporan Selesai" />
+                            <div><?php if (!empty(wp_get_attachment_url($attachment_id))) print('<a href="' . (wp_get_attachment_url($attachment_id)) . '" target="_blank" download>File LPJ II</a>');
+                                  else print('Belum Ada FIle LPJ II') ?></div>
+                          <?php } ?>
                         </form>
                       </div>
                     </td>
@@ -219,13 +192,33 @@ get_header(); ?>
                       <div class="flex">
                         <form name="setujui_dana" method="post">
                           <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
-                          <input type="submit" name="setujui_dana" value="Setujui Dana" />
+                          <?php
+                          if ('pengajuan_dana' == get_post_status(get_the_ID())) {
+                          ?>
+                            <input type="submit" name="setujui_dana" value="Setujui Dana" />
+                          <?php } ?>
+                          <?php
+                          if ('pengajuan_dana_ii' == get_post_status(get_the_ID())) {
+                          ?>
+                            <input type="submit" name="setujui_dana" value="Setujui Dana II" />
+                          <?php } ?>
                         </form>
                       </div>
                     </td>
                   <?php
                   }
-
+                  if (current_user_can('drf')) {
+                  ?>
+                    <td>
+                    </td>
+                  <?php
+                  }
+                  if (current_user_can('reviewer')) {
+                  ?>
+                    <td>
+                    </td>
+                  <?php
+                  }
                   ?>
                 </tr>
             <?php

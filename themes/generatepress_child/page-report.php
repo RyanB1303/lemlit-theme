@@ -78,35 +78,10 @@ get_header(); ?>
             if (array_intersect($allowed_roles, $current_user->roles)) {
               $args = array(
                 'post_type' => 'proposal',
-                'post_status' => ['dana_I_disetujui', 'monev_I']
+                'post_status' => ['dana_i_disetujui', 'dana_ii_disetujui', 'monev_i', 'monev_ii', 'publish']
               );
             }
-            if (isset($_POST['cairkan_dana'])) {
-              $proposal_seleccted = isset($_POST['proposal_id']) ? wp_unslash($_POST['proposal_id']) : '';
-              if (!empty($proposal_seleccted)) {
-                // if ('monev_I' == get_post_meta(get_the_ID(), 'proposal_status', true)) {
-                if ('monev_I' == get_post_status($proposal_seleccted)) {
-                  $update_status = wp_update_post(array(
-                    'ID'          => $proposal_seleccted,
-                    'post_status' => 'monev_II',
-                  ));
-                  if ($update_status != 0) {
-                    add_post_meta($proposal_seleccted, 'proposal_dana_II_tanggal', current_time('d-m-Y'), true);
-                    update_post_meta($proposal_seleccted, 'proposal_status', 'monev_II');
-                    update_post_meta($proposal_seleccted, 'proposal_pencairan_dana', 'monev_II_dicairkan');
-                  }
-                }
-                $update_status = wp_update_post(array(
-                  'ID'          => $proposal_seleccted,
-                  'post_status' => 'monev_I',
-                ));
-                if ($update_status != 0) {
-                  add_post_meta($proposal_seleccted, 'proposal_dana_I_tanggal', current_time('d-m-Y'), true);
-                  update_post_meta($proposal_seleccted, 'proposal_status', 'monev_I');
-                  update_post_meta($proposal_seleccted, 'proposal_pencairan_dana', 'monev_I_dicairkan');
-                }
-              }
-            }
+
             $i = 1;
             $wp_query = new WP_Query($args);
             if (have_posts()) : while (have_posts()) : the_post();  ?>
@@ -123,7 +98,7 @@ get_header(); ?>
                     <div class="flex">
                       <form name="cairkan_dana" method="post">
                         <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
-                        <?php if ('dana_I_disetujui' == get_post_status(get_the_ID())) {
+                        <?php if ('dana_i_disetujui' == get_post_status(get_the_ID())) {
                         ?>
                           <input type="submit" name="cairkan_dana" value="Cairkan Dana I" />
                         <?php
@@ -137,9 +112,17 @@ get_header(); ?>
                         ?>
                           <div class="alert alert-success"><strong>Monev II</strong></div>
                         <?php
-                        } elseif ('dana_II_disetujui' == get_post_status(get_the_ID())) {
+                        }
+                        if ('dana_ii_disetujui' == get_post_status(get_the_ID())) {
                         ?>
                           <input type="submit" name="cairkan_dana" value="Cairkan Dana II" />
+                        <?php
+                        }
+                        ?>
+                        <?php
+                        if ('publish' == get_post_status(get_the_ID())) {
+                        ?>
+                          <div class="alert alert-secondary"><strong>Selesai</strong></div>
                         <?php
                         }
                         ?>

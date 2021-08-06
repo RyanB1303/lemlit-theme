@@ -65,7 +65,7 @@ get_header(); ?>
               <th>Prodi</th>
               <th>Kategori</th>
               <th>Judul</th>
-              <th width="20%">Action</th>
+              <th width="20%">Status</th>
             </tr>
           </thead>
           <tbody>
