@@ -110,6 +110,36 @@ class proposal_post_editor
       'show_in_metabox_dropdown'  => true,
       'show_in_inline_dropdown'   => true,
     ));
+    register_post_status('pengajuan_dana', array(
+      'label'                     => 'Pengajuan Dana ',
+      'public'                    => true,
+      'label_count'               => _n_noop('Pengajuan Dana  s <span class="count">(%s)</span>', 'Pengajuan Dana  s <span class="count">(%s)</span>', 'plugin-domain'),
+      'post_type'                 => array('proposal'), // Define one or more post types the status can be applied to.
+      'show_in_admin_all_list'    => true,
+      'show_in_admin_status_list' => true,
+      'show_in_metabox_dropdown'  => true,
+      'show_in_inline_dropdown'   => true,
+    ));
+    register_post_status('monev_I', array(
+      'label'                     => 'Monev I ',
+      'public'                    => true,
+      'label_count'               => _n_noop('Monev I  s <span class="count">(%s)</span>', 'Monev I  s <span class="count">(%s)</span>', 'plugin-domain'),
+      'post_type'                 => array('proposal'), // Define one or more post types the status can be applied to.
+      'show_in_admin_all_list'    => true,
+      'show_in_admin_status_list' => true,
+      'show_in_metabox_dropdown'  => true,
+      'show_in_inline_dropdown'   => true,
+    ));
+    register_post_status('monev_II', array(
+      'label'                     => 'Monev II ',
+      'public'                    => true,
+      'label_count'               => _n_noop('Monev II  s <span class="count">(%s)</span>', 'Monev II  s <span class="count">(%s)</span>', 'plugin-domain'),
+      'post_type'                 => array('proposal'), // Define one or more post types the status can be applied to.
+      'show_in_admin_all_list'    => true,
+      'show_in_admin_status_list' => true,
+      'show_in_metabox_dropdown'  => true,
+      'show_in_inline_dropdown'   => true,
+    ));
   }
 
   public function change_proposal_status($data)

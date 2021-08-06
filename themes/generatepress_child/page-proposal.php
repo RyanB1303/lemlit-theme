@@ -67,13 +67,13 @@ get_header(); ?>
               <th>Status Pencairan Dana</th>
               <th>Status Proposal</th>
               <th>Data Dukung SK Rektor</th>
-              <!-- <th>Action</th> -->
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             <?php
             global $current_user, $wp_query;
-            $allowed_roles = array('administrator', 'lemlit', 'drf', 'reviewer', 'jurusan', 'dekan');
+            $allowed_roles = array('administrator', 'drf', 'reviewer', 'dekan');
             if (array_intersect($allowed_roles, $current_user->roles)) {
               $args = array(
                 'post_type' => 'proposal',
@@ -87,6 +87,45 @@ get_header(); ?>
                 'author' => $current_user->ID,
               );
             }
+            if (current_user_can('lemlit')) {
+              $args = array(
+                'post_type' => 'proposal',
+                'post_status' => 'reviewed',
+              );
+            }
+            if (current_user_can('jurusan')) {
+              $args = array(
+                'post_type' => 'proposal',
+                'post_status' => 'pengajuan_dana',
+              );
+            }
+            if (isset($_POST['ajukan_dana'])) {
+              $proposal_seleccted = isset($_POST['proposal_id']) ? wp_unslash($_POST['proposal_id']) : '';
+              if (!empty($proposal_seleccted)) {
+                $update_status = wp_update_post(array(
+                  'ID'          => $proposal_seleccted,
+                  'post_status' => 'pengajuan_dana',
+                ));
+                if ($update_status != 0) {
+                  add_post_meta($proposal_seleccted, 'proposal_dana_I_tanggal', current_time('d-m-Y'), true);
+                  update_post_meta($proposal_seleccted, 'proposal_status', 'pengajuan dana');
+                }
+              }
+            }
+            if (isset($_POST['setujui_dana'])) {
+              $proposal_seleccted = isset($_POST['proposal_id']) ? wp_unslash($_POST['proposal_id']) : '';
+              if (!empty($proposal_seleccted)) {
+                $update_status = wp_update_post(array(
+                  'ID'          => $proposal_seleccted,
+                  'post_status' => 'monev_I',
+                ));
+                if ($update_status != 0) {
+                  add_post_meta($proposal_seleccted, 'proposal_monev_I', current_time('d-m-Y'), true);
+                  update_post_meta($proposal_seleccted, 'proposal_status', 'monev_I');
+                }
+              }
+            }
+
             $i = 1;
             $wp_query = new WP_Query($args);
             if (have_posts()) : while (have_posts()) : the_post();  ?>
@@ -99,8 +138,33 @@ get_header(); ?>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_pencairan_dana', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_status', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_data_dukung', true)) ?></td>
-                  <!-- <td><?php //the_shortlink('View')
-                            ?></td> -->
+                  <?php
+                  if (current_user_can('lemlit')) {
+                  ?>
+                    <td>
+                      <div class="flex">
+                        <form name="ajukan_dana" method="post">
+                          <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
+                          <input type="submit" name="ajukan_dana" value="Ajukan Dana" />
+                        </form>
+                      </div>
+                    </td>
+                  <?php
+                  }
+                  if (current_user_can('jurusan')) {
+                  ?>
+                    <td>
+                      <div class="flex">
+                        <form name="setujui_dana" method="post">
+                          <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
+                          <input type="submit" name="setujui_dana" value="Setujui Dana" />
+                        </form>
+                      </div>
+                    </td>
+                  <?php
+                  } else echo '<td></td>'
+
+                  ?>
                 </tr>
             <?php
                 $i++;
