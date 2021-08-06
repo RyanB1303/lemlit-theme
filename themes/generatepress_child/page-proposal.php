@@ -90,7 +90,7 @@ get_header(); ?>
             if (current_user_can('lemlit')) {
               $args = array(
                 'post_type' => 'proposal',
-                'post_status' => 'reviewed',
+                'post_status' => array('reviewed', 'pending'),
               );
             }
             if (current_user_can('jurusan')) {
@@ -162,7 +162,7 @@ get_header(); ?>
                       </div>
                     </td>
                   <?php
-                  } else echo '<td></td>'
+                  }
 
                   ?>
                 </tr>
