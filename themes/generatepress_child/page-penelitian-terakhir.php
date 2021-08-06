@@ -65,7 +65,7 @@ get_header(); ?>
               <th>Prodi</th>
               <th>Kategori</th>
               <th>Judul</th>
-              <th>Action</th>
+              <th width="20%">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -78,10 +78,10 @@ get_header(); ?>
                 'post_status' => 'any'
               );
             }
-            if (!current_user_can('delete_plugins')) {
+            if (current_user_can('peneliti')) {
               $args = array(
                 'post_type' => 'proposal',
-                'post_status' => array('publish', 'pending', 'private'),
+                'post_status' => 'any',
                 'author' => $current_user->ID,
               );
             }
@@ -94,7 +94,9 @@ get_header(); ?>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_judul', true)) ?></td>
-                  <td><?php the_shortlink('View') ?></td>
+                  <td>
+                    <div class="alert alert-success"><strong><?php esc_html_e(get_post_status(get_the_ID())) ?></strong></div>
+                  </td>
                 </tr>
             <?php endwhile;
             endif;

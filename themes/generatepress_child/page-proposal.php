@@ -67,7 +67,7 @@ get_header(); ?>
               <th>Status Pencairan Dana</th>
               <th>Status Proposal</th>
               <th>Data Dukung SK Rektor</th>
-              <th>Action</th>
+              <th width="20%">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -99,6 +99,33 @@ get_header(); ?>
                 'post_status' => 'pengajuan_dana',
               );
             }
+
+            // $content_directory = $wp_filesystem->wp_content_dir() . 'uploads/';
+            // $wp_filesystem->mkdir($content_directory . 'LPJ_I');
+            // $target_dir_location = $content_directory . 'LPJ_I/';
+            if (isset($_POST['upload_lpj']) && isset($_FILES['file_lpj'])) {
+              if (!function_exists('wp_handle_upload')) {
+                require_once(ABSPATH . 'wp-admin/includes/file.php');
+              }
+              $proposal_seleccted = isset($_POST['proposal_id']) ? wp_unslash($_POST['proposal_id']) : '';
+              if (!empty($proposal_seleccted) && !empty($file_lpj)) {
+                $file_lpj = $_FILES['file_lpj'];
+                $file_attr = wp_handle_upload($file_lpj);
+
+                $attachment = array(
+                  'post_mime_type' => $wp
+
+                );
+
+                $update_status = wp_update_post(array(
+                  'ID'          => $proposal_seleccted,
+                  'post_status' => 'laporan_lpj_i',
+                ));
+                if ($update_status != 0) {
+                  update_post_meta($proposal_seleccted, 'proposal_status', 'laporan_lpj_i');
+                }
+              }
+            }
             if (isset($_POST['ajukan_dana'])) {
               $proposal_seleccted = isset($_POST['proposal_id']) ? wp_unslash($_POST['proposal_id']) : '';
               if (!empty($proposal_seleccted)) {
@@ -107,7 +134,6 @@ get_header(); ?>
                   'post_status' => 'pengajuan_dana',
                 ));
                 if ($update_status != 0) {
-                  add_post_meta($proposal_seleccted, 'proposal_dana_I_tanggal', current_time('d-m-Y'), true);
                   update_post_meta($proposal_seleccted, 'proposal_status', 'pengajuan dana');
                 }
               }
@@ -117,11 +143,10 @@ get_header(); ?>
               if (!empty($proposal_seleccted)) {
                 $update_status = wp_update_post(array(
                   'ID'          => $proposal_seleccted,
-                  'post_status' => 'monev_I',
+                  'post_status' => 'dana_I_disetujui',
                 ));
                 if ($update_status != 0) {
-                  add_post_meta($proposal_seleccted, 'proposal_monev_I', current_time('d-m-Y'), true);
-                  update_post_meta($proposal_seleccted, 'proposal_status', 'monev_I');
+                  update_post_meta($proposal_seleccted, 'proposal_status', 'dana_I_disetujui');
                 }
               }
             }
@@ -138,7 +163,44 @@ get_header(); ?>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_pencairan_dana', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_status', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_data_dukung', true)) ?></td>
+                  <?php if (current_user_can('peneliti')) { ?>
+                    <td>
+                      <div class="flex">
+                        <form name="upload_lpj" method="post" enctype="multipart/form-data">
+                          <input type="file" id="file_lpj" name="file_lpj" hidden />
+                          <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
+                          <?php
+                          if ('monev_i' == get_post_status(get_the_ID())) {
+                          ?>
+                            <button class="btn btn-primary" id="upload-lpj-i"><strong>Upload Laporan LPJ I</strong></button>
+                            <input type="submit" name="upload_lpj" value="Submit LPJ I" class="mt-3" />
+                            <script>
+                              document.getElementById('upload-lpj-i').addEventListener('click', openDialog);
+
+                              function openDialog() {
+                                document.getElementById('file_lpj').click();
+                              }
+                            </script>
+                          <?php
+                          }
+                          if ('monev_ii' == get_post_status(get_the_ID())) {
+                          ?>
+                            <button class="btn btn-primary" id="upload-lpj-ii"><strong>Upload Laporan LPJ II</strong></button>
+                            <script>
+                              document.getElementById('upload-lpj-ii').addEventListener('click', openDialog);
+
+                              function openDialog() {
+                                document.getElementById('file_lpj').click();
+                              }
+                            </script>
+                          <?php
+                          }
+                          ?>
+                        </form>
+                      </div>
+                    </td>
                   <?php
+                  }
                   if (current_user_can('lemlit')) {
                   ?>
                     <td>

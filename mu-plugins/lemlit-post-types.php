@@ -140,6 +140,46 @@ class proposal_post_editor
       'show_in_metabox_dropdown'  => true,
       'show_in_inline_dropdown'   => true,
     ));
+    register_post_status('dana_I_disetujui', array(
+      'label'                     => 'Dana I Setuju',
+      'public'                    => true,
+      'label_count'               => _n_noop('Dana I Setuju  s <span class="count">(%s)</span>', 'Dana I Setuju  s <span class="count">(%s)</span>', 'plugin-domain'),
+      'post_type'                 => array('proposal'), // Define one or more post types the status can be applied to.
+      'show_in_admin_all_list'    => true,
+      'show_in_admin_status_list' => true,
+      'show_in_metabox_dropdown'  => true,
+      'show_in_inline_dropdown'   => true,
+    ));
+    register_post_status('dana_II_disetujui', array(
+      'label'                     => 'Dana II Setuju',
+      'public'                    => true,
+      'label_count'               => _n_noop('Dana II Setuju  s <span class="count">(%s)</span>', 'Dana II Setuju  s <span class="count">(%s)</span>', 'plugin-domain'),
+      'post_type'                 => array('proposal'), // Define one or more post types the status can be applied to.
+      'show_in_admin_all_list'    => true,
+      'show_in_admin_status_list' => true,
+      'show_in_metabox_dropdown'  => true,
+      'show_in_inline_dropdown'   => true,
+    ));
+    register_post_status('laporan_lpj_i', array(
+      'label'                     => 'Laporan LPJ I',
+      'public'                    => true,
+      'label_count'               => _n_noop('Laporan LPJ I  s <span class="count">(%s)</span>', 'Laporan LPJ I  s <span class="count">(%s)</span>', 'plugin-domain'),
+      'post_type'                 => array('proposal'), // Define one or more post types the status can be applied to.
+      'show_in_admin_all_list'    => true,
+      'show_in_admin_status_list' => true,
+      'show_in_metabox_dropdown'  => true,
+      'show_in_inline_dropdown'   => true,
+    ));
+    register_post_status('laporan_lpj_ii', array(
+      'label'                     => 'Laporan LPJ II',
+      'public'                    => true,
+      'label_count'               => _n_noop('Laporan LPJ II  s <span class="count">(%s)</span>', 'Laporan LPJ II  s <span class="count">(%s)</span>', 'plugin-domain'),
+      'post_type'                 => array('proposal'), // Define one or more post types the status can be applied to.
+      'show_in_admin_all_list'    => true,
+      'show_in_admin_status_list' => true,
+      'show_in_metabox_dropdown'  => true,
+      'show_in_inline_dropdown'   => true,
+    ));
   }
 
   public function change_proposal_status($data)

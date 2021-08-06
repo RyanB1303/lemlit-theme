@@ -56,6 +56,7 @@ get_header(); ?>
         ?>
       </header>
       <div class="entry-content table-responsive">
+        <h4>Proposal Yang Telah Disetujui Oleh Jurusan</h4>
         <table class="table table-bordered report">
           <thead>
             <tr>
@@ -66,34 +67,89 @@ get_header(); ?>
               <th>Judul</th>
               <th>Dana Diajukan</th>
               <th>Tanggal Pencairan Dana Tahap I</th>
-              <th>Tanggal Pencairan Dana Tahap I</th>
-              <th>Action</th>
+              <th>Tanggal Pencairan Dana Tahap II</th>
+              <th width="20%">Action</th>
             </tr>
           </thead>
           <tbody>
             <?php
             global $current_user, $wp_query;
-            $allowed_roles = array('administrator', 'jurusan', 'dekan');
+            $allowed_roles = array('administrator', 'jurusan', 'dekan', 'lemlit');
             if (array_intersect($allowed_roles, $current_user->roles)) {
               $args = array(
                 'post_type' => 'proposal',
-                'post_status' => ['publish', 'pending']
+                'post_status' => ['dana_I_disetujui', 'monev_I']
               );
             }
+            if (isset($_POST['cairkan_dana'])) {
+              $proposal_seleccted = isset($_POST['proposal_id']) ? wp_unslash($_POST['proposal_id']) : '';
+              if (!empty($proposal_seleccted)) {
+                // if ('monev_I' == get_post_meta(get_the_ID(), 'proposal_status', true)) {
+                if ('monev_I' == get_post_status($proposal_seleccted)) {
+                  $update_status = wp_update_post(array(
+                    'ID'          => $proposal_seleccted,
+                    'post_status' => 'monev_II',
+                  ));
+                  if ($update_status != 0) {
+                    add_post_meta($proposal_seleccted, 'proposal_dana_II_tanggal', current_time('d-m-Y'), true);
+                    update_post_meta($proposal_seleccted, 'proposal_status', 'monev_II');
+                    update_post_meta($proposal_seleccted, 'proposal_pencairan_dana', 'monev_II_dicairkan');
+                  }
+                }
+                $update_status = wp_update_post(array(
+                  'ID'          => $proposal_seleccted,
+                  'post_status' => 'monev_I',
+                ));
+                if ($update_status != 0) {
+                  add_post_meta($proposal_seleccted, 'proposal_dana_I_tanggal', current_time('d-m-Y'), true);
+                  update_post_meta($proposal_seleccted, 'proposal_status', 'monev_I');
+                  update_post_meta($proposal_seleccted, 'proposal_pencairan_dana', 'monev_I_dicairkan');
+                }
+              }
+            }
+            $i = 1;
             $wp_query = new WP_Query($args);
             if (have_posts()) : while (have_posts()) : the_post();  ?>
                 <tr id="proposal- <?php the_ID(); ?>" <?php post_class() ?>>
-                  <td>1</td>
+                  <td><?php esc_html_e($i) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_ketua', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_prodi', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_kategori', true)) ?></td>
                   <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_judul', true)) ?></td>
                   <td>Rp. <?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_dana', true)) ?></td>
-                  <td></td>
-                  <td></td>
-                  <td><?php the_shortlink('View') ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_dana_I_tanggal', true)) ?></td>
+                  <td><?php esc_html_e(get_post_meta(get_the_ID(), 'proposal_dana_II_tanggal', true)) ?></td>
+                  <td>
+                    <div class="flex">
+                      <form name="cairkan_dana" method="post">
+                        <input type="hidden" name="proposal_id" value="<?php the_ID(); ?>">
+                        <?php if ('dana_I_disetujui' == get_post_status(get_the_ID())) {
+                        ?>
+                          <input type="submit" name="cairkan_dana" value="Cairkan Dana I" />
+                        <?php
+                        }
+                        if ('monev_i' == get_post_status(get_the_ID())) {
+                        ?>
+                          <div class="alert alert-success"><strong>Monev I</strong></div>
+                        <?php
+                        }
+                        if ('monev_ii' == get_post_status(get_the_ID())) {
+                        ?>
+                          <div class="alert alert-success"><strong>Monev II</strong></div>
+                        <?php
+                        } elseif ('dana_II_disetujui' == get_post_status(get_the_ID())) {
+                        ?>
+                          <input type="submit" name="cairkan_dana" value="Cairkan Dana II" />
+                        <?php
+                        }
+                        ?>
+                      </form>
+                    </div>
+                  </td>
                 </tr>
-            <?php endwhile;
+            <?php
+                $i++;
+              endwhile;
             endif;
             ?>
           </tbody>
