@@ -74,15 +74,16 @@ get_header(); ?>
             <?php
             if (isset($_POST['nilai_proposal'])) {
               $proposal_seleccted = isset($_POST['proposal_id']) ? wp_unslash($_POST['proposal_id']) : '';
-              // langsun aja ga usah checking
+              $target_cap = isset($_POST['target_cap']) ? wp_unslash($_POST['target_cap']) : '';
+              $nilai_rev = isset($_POST['nilai_rev']) ? wp_unslash($_POST['nilai_rev']) : '';
               if (!empty($proposal_seleccted)) {
                 $update_status = wp_update_post(array(
                   'ID'          => $proposal_seleccted,
                   'post_status' => 'reviewed',
                 ));
                 if ($update_status != 0) {
-                  update_post_meta($post_id, 'target_nilai_proposal', $_POST['target_cap']);
-                  update_post_meta($post_id, 'nilai_reviewer_proposal', $_POST['nilai_rev']);
+                  update_post_meta($proposal_seleccted, 'target_nilai_proposal', $target_cap);
+                  update_post_meta($proposal_seleccted, 'nilai_reviewer_proposal', $nilai_rev);
                   update_post_meta($proposal_seleccted, 'proposal_status', 'reviewed');
                 }
               }
